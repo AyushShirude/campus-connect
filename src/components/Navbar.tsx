@@ -8,7 +8,7 @@ const navLinks = [
   { label: "Home", path: "/" },
   { label: "Events", path: "/events" },
   { label: "Categories", path: "/categories" },
-  { label: "Past Events", path: "/past-events" },
+  { label: "Current Events", path: "/past-events" },
   { label: "My History", path: "/my-history" },
   { label: "Contact", path: "/contact" },
 ];
@@ -25,7 +25,7 @@ const Navbar = () => {
       {/* Floating Dock Navbar */}
       <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <nav className="pointer-events-auto bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-gray-200/50 dark:border-gray-700/50 rounded-full p-2 flex items-center justify-between w-full max-w-7xl transition-all duration-300">
-          
+
           {/* Logo Section (Left Pill) */}
           <Link to="/" className="flex items-center gap-3 px-4 py-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors group">
             <div className="relative overflow-hidden rounded-full bg-white dark:bg-gray-800 p-1 shadow-sm border border-gray-100 dark:border-gray-700">
