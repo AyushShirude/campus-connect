@@ -55,6 +55,8 @@ export const events: EventItem[] = [
   { id: "e9", name: "Green Tech Hack", category: "hackathons", description: "Hackathon focused on sustainable technology and green innovation.", date: "2026-04-15", time: "10:00 AM", location: "Lab Complex", fee: 50, image: hackathonImg, status: "upcoming" },
   { id: "e10", name: "Inter-College Debate", category: "intercollege-events", description: "Prestigious debate competition with colleges from across the state.", date: "2026-03-25", time: "2:00 PM", location: "Conference Hall", fee: 50, image: intercollegeImg, status: "ongoing" },
   { id: "e11", name: "Cultural Fest 2026", category: "intercollege-events", description: "Grand inter-college cultural extravaganza with performances and exhibitions.", date: "2026-04-20", time: "10:00 AM", location: "Campus Wide", fee: 50, image: intercollegeImg, status: "upcoming" },
+  { id: "e12", name: "Basketball Championship", category: "sports-events", description: "State-level inter-college basketball tournament.", date: "2026-04-18", time: "9:00 AM", location: "Indoor Stadium", fee: 100, image: sportsImg, status: "upcoming" },
+  { id: "e13", name: "Table Tennis Open", category: "sports-events", description: "Campus-wide table tennis tournament for singles and doubles.", date: "2026-04-22", time: "10:00 AM", location: "Student Center Hub", fee: 30, image: sportsImg, status: "upcoming" },
 ];
 
 export const pastEvents: EventItem[] = [
