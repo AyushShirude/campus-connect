@@ -33,8 +33,10 @@ const Events = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-display font-bold text-foreground mb-2">All Events</h1>
-      <p className="text-muted-foreground mb-10">Browse all ongoing and upcoming events</p>
+      <div className="text-center max-w-2xl mx-auto mb-12">
+        <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">All Events</h1>
+        <p className="text-lg text-muted-foreground">Browse all ongoing and upcoming events</p>
+      </div>
 
       {ongoing.length > 0 && (
         <>

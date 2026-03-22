@@ -3,8 +3,10 @@ import { pastEvents } from "@/data/mockData";
 
 const PastEvents = () => (
   <div className="container mx-auto px-4 py-10">
-    <h1 className="text-3xl font-display font-bold text-foreground mb-2">Past Events</h1>
-    <p className="text-muted-foreground mb-10">Relive the memorable events from previous sessions</p>
+    <div className="text-center max-w-2xl mx-auto mb-12">
+      <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">Current Events</h1>
+      <p className="text-lg text-muted-foreground">Relive the memorable events from previous sessions</p>
+    </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {pastEvents.map((event) => (
         <div key={event.id} className="bg-card rounded-lg overflow-hidden shadow-card">

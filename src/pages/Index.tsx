@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, ArrowRight, GraduationCap, Users, Trophy, Rocket } from "lucide-react";
+import confetti from "canvas-confetti";
 import AuthModal from "@/components/AuthModal";
 import { categories, events, newsItems } from "@/data/mockData";
 import UpcomingEventsSlider from "@/components/UpcomingEventsSlider";
@@ -10,36 +11,83 @@ const Index = () => {
   const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
 
+  useEffect(() => {
+    // Oscar-style confetti cannon after the text has started appearing
+    const timeoutId = setTimeout(() => {
+      const duration = 4500;
+      const end = Date.now() + duration;
+      const colors = ['#ffffff', '#ffccd5', '#d4113e', '#85162f']; // Theme colors
+
+      // Massive central explosion to cover the entire page (lasts ~3s)
+      confetti({
+        particleCount: 200,
+        spread: 360,
+        origin: { x: 0.5, y: 0.4 },
+        colors: colors,
+        gravity: 0.8,
+        scalar: 1.2,
+        startVelocity: 45,
+        ticks: 200, // ~3 seconds
+        zIndex: 60
+      });
+      // Left flanking burst
+      confetti({
+        particleCount: 100,
+        angle: 60,
+        spread: 80,
+        origin: { x: 0, y: 0.7 },
+        colors: colors,
+        gravity: 0.8,
+        scalar: 1.2,
+        startVelocity: 40,
+        ticks: 200,
+        zIndex: 60
+      });
+      // Right flanking burst
+      confetti({
+        particleCount: 100,
+        angle: 120,
+        spread: 80,
+        origin: { x: 1, y: 0.7 },
+        colors: colors,
+        gravity: 0.8,
+        scalar: 1.2,
+        startVelocity: 40,
+        ticks: 200,
+        zIndex: 60
+      });
+    }, 1200);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <div>
       {/* Hero */}
       <section className="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary via-[#611224] to-[#2a0810]">
 
-        {/* Animated Background SVGs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 mix-blend-overlay">
-          <svg className="absolute w-[800px] h-[800px] -top-32 -left-32 animate-[spin_60s_linear_infinite]" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#ffffff" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.3C91.4,-33.5,98,-18.1,97.7,-3.1C97.4,11.9,90.2,26.4,80.8,40.1C71.3,53.8,59.6,66.6,45.3,74.5C31.1,82.4,14.3,85.4,-1.8,88.4C-17.9,91.4,-35.8,94.4,-50.1,87.6C-64.4,80.8,-75.1,64.2,-83.4,47.4C-91.8,30.6,-97.8,13.6,-96.2,-2.1C-94.6,-17.8,-85.4,-32.4,-74.6,-44C-63.8,-55.6,-51.4,-64.2,-38.3,-72C-25.2,-79.8,-11.4,-86.8,1.9,-89.4C15.2,-92,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
-          </svg>
-          <svg className="absolute w-[600px] h-[600px] top-1/2 -right-32 animate-[spin_40s_linear_infinite_reverse]" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#ffffff" d="M39.6,-65.4C51.6,-55.6,61.9,-43.3,69.5,-29.3C77.1,-15.3,82,0.4,79.5,14.7C77,29,67.1,41.9,55.1,51.8C43.1,61.7,29,68.6,14.2,72C-0.6,75.4,-16.1,75.3,-30.2,69.8C-44.3,64.3,-57,53.4,-66.6,40.1C-76.2,26.8,-82.7,11.1,-81.9,-4C-81.1,-19.1,-73,-33.6,-62.1,-44.6C-51.2,-55.6,-37.5,-63.1,-23.9,-68.8C-10.3,-74.5,3.2,-78.4,15.9,-76.3C28.6,-74.2,40.5,-66.1,39.6,-65.4Z" transform="translate(100 100)" />
-          </svg>
-          <svg className="absolute w-[500px] h-[500px] -bottom-48 left-1/4 animate-[spin_50s_linear_infinite]" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#ffffff" d="M47.7,-68.5C61.4,-60.7,71.8,-46.8,78.2,-31.4C84.7,-16,87.2,1,83.5,16.5C79.8,32,69.9,46,57.1,55.7C44.3,65.4,28.6,70.8,12.7,73.4C-3.2,76,-19.3,75.8,-33.1,69.2C-46.9,62.6,-58.4,49.6,-66.4,35C-74.4,20.4,-78.9,4.2,-76.2,-10.9C-73.5,-26,-63.6,-40,-50.8,-48.5C-38,-57,-22.3,-60,-7.1,-60C8.1,-60,24.3,-57,47.7,-68.5Z" transform="translate(100 100)" />
-          </svg>
-        </div>
+        <style>
+          {`
+            @keyframes pop-in {
+              0% { opacity: 0; transform: scale(0.95) translateY(30px); }
+              100% { opacity: 1; transform: scale(1) translateY(0); }
+            }
+            @keyframes light-beam {
+              0% { opacity: 0; transform: rotate(-15deg) translateX(-100%); }
+              30%, 70% { opacity: 0.15; }
+              100% { opacity: 0; transform: rotate(-15deg) translateX(100%); }
+            }
+          `}
+        </style>
 
-        {/* Floating Particles/Stars */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-[15%] w-2 h-2 rounded-full bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-pulse" />
-          <div className="absolute top-[35%] right-[20%] w-3 h-3 rounded-full bg-white/30 shadow-[0_0_15px_rgba(255,255,255,0.6)] animate-pulse delay-75" />
-          <div className="absolute bottom-1/4 left-[30%] w-2 h-2 rounded-full bg-white/50 shadow-[0_0_8px_rgba(255,255,255,0.9)] animate-pulse delay-150" />
-          <div className="absolute top-1/2 right-[35%] w-1.5 h-1.5 rounded-full bg-white/60 shadow-[0_0_12px_rgba(255,255,255,1)] animate-pulse delay-300" />
-          <div className="absolute bottom-[10%] right-[10%] w-2.5 h-2.5 rounded-full bg-white/40 shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-pulse delay-500" />
+        {/* Background Spotlights */}
+        <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden mix-blend-screen opacity-50">
+          <div className="absolute top-0 left-1/4 w-[150%] h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent origin-top-left" style={{ animation: 'light-beam 6s ease-in-out infinite alternate' }} />
+          <div className="absolute top-0 right-1/4 w-[150%] h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent origin-top-right" style={{ animation: 'light-beam 7s ease-in-out infinite alternate-reverse' }} />
         </div>
 
         {/* Main Content */}
-        <div className="relative z-10 text-center px-4 max-w-4xl animate-fade-in-up mt-10">
-
+        <div className="relative z-20 text-center px-4 max-w-4xl mt-10" style={{ animation: 'pop-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards' }}>
           <h1 className="text-5xl md:text-[5rem] lg:text-[6rem] font-display font-extrabold text-white mb-6 leading-[1.1] tracking-tight drop-shadow-lg">
             Welcome to <br className="hidden md:block" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-100 via-white to-red-200 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">PCU Events</span>
           </h1>
@@ -47,19 +95,49 @@ const Index = () => {
             Discover, participate, and showcase your talent through exciting university events curated just for you.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <button onClick={() => setAuthModal("register")} className="px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-[0_4px_25px_rgba(255,255,255,0.25)] hover:-translate-y-1.5 hover:shadow-[0_8px_35px_rgba(255,255,255,0.35)] w-full sm:w-auto text-lg">
+            <button onClick={() => setAuthModal("register")} className="px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-[0_4px_25px_rgba(255,255,255,0.25)] hover:-translate-y-1.5 hover:shadow-[0_8px_35px_rgba(255,255,255,0.35)] w-full sm:w-auto text-lg pointer-events-auto">
               Register Now
             </button>
-            <Link to="/events" className="px-8 py-4 bg-primary/40 text-white border-2 border-white/30 font-bold rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1.5 backdrop-blur-md w-full sm:w-auto text-lg shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+            <Link to="/events" className="px-8 py-4 bg-primary/40 text-white border-2 border-white/30 font-bold rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1.5 backdrop-blur-md w-full sm:w-auto text-lg shadow-[0_4px_20px_rgba(0,0,0,0.2)] pointer-events-auto">
               Explore Events
             </Link>
           </div>
         </div>
 
-        {/* Bottom wave separator for smooth transition to main content */}
+        {/* Animated Bottom wave separator */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20">
-          <svg className="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[80px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,121.22,200.5,112.5,241.6,107.56,282.51,89.5,321.39,56.44Z" className="fill-background"></path>
+          <svg 
+            className="relative block w-full h-[60px] md:h-[120px]" 
+            xmlns="http://www.w3.org/2000/svg" 
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" 
+            preserveAspectRatio="none"
+            shapeRendering="auto"
+          >
+            <style>
+              {`
+                .parallax > use {
+                  animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+                }
+                .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+                .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+                .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+                .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
+                @keyframes move-forever {
+                  0% { transform: translate3d(-90px,0,0); }
+                  100% { transform: translate3d(85px,0,0); }
+                }
+              `}
+            </style>
+            <defs>
+              <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g className="parallax">
+              <use href="#gentle-wave" x="48" y="0" className="fill-background/30" />
+              <use href="#gentle-wave" x="48" y="3" className="fill-background/50" />
+              <use href="#gentle-wave" x="48" y="5" className="fill-background/70" />
+              <use href="#gentle-wave" x="48" y="7" className="fill-background" />
+            </g>
           </svg>
         </div>
       </section>

@@ -4,8 +4,10 @@ import { categories } from "@/data/mockData";
 
 const Categories = () => (
   <div className="container mx-auto px-4 py-10">
-    <h1 className="text-3xl font-display font-bold text-foreground mb-2">Event Categories</h1>
-    <p className="text-muted-foreground mb-10">Select a category to explore events</p>
+    <div className="text-center max-w-2xl mx-auto mb-12">
+      <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">Event Categories</h1>
+      <p className="text-lg text-muted-foreground">Select a category to explore events</p>
+    </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {categories.map((cat) => (
         <div key={cat.id} className="bg-card rounded-lg overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 group">

@@ -1,0 +1,8 @@
+UI Polish: Refined Hero animations, global layouts, and premium MyHistory cards
+
+- Replaced Hero static waves with multi-layered, infinite parallax SVG waves.
+- Upgraded the Hero intro to use a massive 3-second canvas-confetti burst themed in maroon/white, replacing CSS curtains.
+- Patched the floating Navbar collision by applying dynamic padding in Layout.tsx to elegantly shift internal page content down.
+- Standardized the header blocks across Events, Categories, PastEvents, MyHistory, and Contact into modern, center-aligned typography.
+- Renamed 'Past Events' heading to 'Current Events'.
+- Restyled My Event History cards into a premium Tailwind CSS design featuring programmatic image binding, custom 'shine' hover animations, radial glows, and floating confirmed badges.

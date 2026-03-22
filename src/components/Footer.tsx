@@ -17,7 +17,23 @@ const Footer = () => {
   return (
     <footer className="gradient-maroon text-primary-foreground">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Column 1: Logo and About */}
+          <div>
+            <Link to="/" className="flex items-center gap-3 mb-6 group inline-flex">
+              <div className="relative overflow-hidden rounded-full bg-white p-1 shadow-sm border border-gray-100">
+                <img src="/assets/logo.png" alt="PCU Logo" className="h-10 w-auto relative z-10" />
+              </div>
+              <div className="leading-tight">
+                <p className="text-lg font-bold text-white tracking-wide transition-colors">PCU Events</p>
+                <p className="text-[10px] text-white/80 font-medium tracking-widest uppercase">Learn • Grow</p>
+              </div>
+            </Link>
+            <p className="text-sm opacity-80 leading-relaxed">
+              Discover, participate, and celebrate. The official campus event hub for Pimpri Chinchwad University students and faculty.
+            </p>
+          </div>
+
           <div>
             <h3 className="text-lg font-display font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
@@ -65,7 +81,7 @@ const Footer = () => {
                 placeholder="Your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-md text-sm bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary-foreground/40"
+                className="flex-1 w-[1%] px-3 py-2 rounded-md text-sm bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary-foreground/40"
               />
               <button type="submit" className="px-4 py-2 bg-primary-foreground text-primary text-sm font-medium rounded-md hover:bg-primary-foreground/90 transition-colors">
                 Subscribe
@@ -74,8 +90,10 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-6 text-center text-sm opacity-60">
-          © 2026 Pimpri Chinchwad University. All rights reserved.
+        <div className="border-t border-primary-foreground/20 mt-8 pt-6 flex justify-end">
+          <div className="text-sm opacity-60">
+            © 2026 Pimpri Chinchwad University. All rights reserved.
+          </div>
         </div>
       </div>
     </footer>
