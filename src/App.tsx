@@ -13,6 +13,7 @@ import PastEvents from "./pages/PastEvents";
 import MyHistory from "./pages/MyHistory";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/past-events" element={<PastEvents />} />
                 <Route path="/my-history" element={<MyHistory />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>

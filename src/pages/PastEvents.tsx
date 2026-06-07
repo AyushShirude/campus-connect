@@ -1,39 +1,112 @@
-import { Calendar, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Calendar, MapPin, CheckCircle } from "lucide-react";
 import { pastEvents } from "@/data/mockData";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
-const PastEvents = () => (
-  <div className="container mx-auto px-4 py-10">
-    <div className="text-center max-w-2xl mx-auto mb-12">
-      <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">Current Events</h1>
-      <p className="text-lg text-muted-foreground">Relive the memorable events from previous sessions</p>
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {pastEvents.map((event) => (
-        <div key={event.id} className="bg-card rounded-lg overflow-hidden shadow-card">
-          <div className="relative h-44 overflow-hidden">
-            <img src={event.image} alt={event.name} className="w-full h-full object-cover grayscale-[30%]" />
-            <span className="absolute top-3 left-3 px-2 py-0.5 bg-muted-foreground text-primary-foreground text-xs font-semibold rounded">COMPLETED</span>
-          </div>
-          <div className="p-4">
-            <h3 className="font-display font-bold text-foreground mb-1">{event.name}</h3>
-            <p className="text-xs text-muted-foreground mb-2">{event.description}</p>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
-              <Calendar size={12} /> {event.date}
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
-              <MapPin size={12} /> {event.location}
-            </div>
-            {event.highlights && (
-              <div className="bg-maroon-light rounded-md p-3">
-                <p className="text-xs font-semibold text-primary mb-1">Highlights</p>
-                <p className="text-xs text-muted-foreground">{event.highlights}</p>
+const PastEvents = () => {
+  const { user, registerForEvent, isRegisteredForEvent } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRegister = (event: typeof pastEvents[0]) => {
+    if (!user) {
+      navigate("/auth?mode=login");
+      return;
+    }
+    if (isRegisteredForEvent(event.id)) {
+      toast.info("Already registered for this event");
+      return;
+    }
+    // Simulate payment
+    const confirmed = window.confirm(`Confirm payment of ₹${event.fee} for "${event.name}"?`);
+    if (confirmed) {
+      registerForEvent({
+        eventId: event.id,
+        eventName: event.name,
+        category: event.category || "Events",
+        date: event.date,
+        time: event.time || "10:00 AM",
+        fee: event.fee,
+      });
+      toast.success(`Successfully registered for ${event.name}! Payment of ₹${event.fee} confirmed.`);
+    }
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-10">
+      <div className="text-center max-w-2xl mx-auto mb-12">
+        <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">Current Events</h1>
+        <p className="text-lg text-muted-foreground">Explore and register for active events in current sessions</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {pastEvents.map((event) => {
+          const registered = isRegisteredForEvent(event.id);
+          return (
+            <div key={event.id} className="group relative bg-card rounded-2xl p-5 border border-border overflow-hidden transition-all duration-500 hover:-translate-y-2.5 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] hover:border-primary/30 flex flex-col h-full font-body">
+              
+              {/* Shine Element overlay */}
+              <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent_40%,rgba(255,255,255,0.7)_50%,transparent_60%)] bg-[length:300%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shine pointer-events-none z-10 transition-opacity duration-300 mix-blend-overlay" />
+              
+              {/* Glow Element */}
+              <div className="absolute inset-[-10px] bg-[radial-gradient(circle_at_50%_0%,theme(colors.primary.DEFAULT/0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
+
+              <div className="relative z-20 flex flex-col h-full">
+                {/* Premium floating Badge */}
+                <div className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-[0.65em] font-extrabold shadow-md transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 z-30 flex items-center gap-1 uppercase tracking-wide text-white ${event.status === "ongoing" ? "bg-green-600" : "bg-primary"}`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping mr-0.5" />
+                  {event.status}
+                </div>
+
+                {/* Image with scaling effect */}
+                <div className="w-full h-40 rounded-xl overflow-hidden mb-5 relative transition-all duration-500 group-hover:shadow-md group-hover:-translate-y-1 group-hover:scale-[1.03]">
+                  <img src={event.image} alt={event.name} className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  {/* Inner styling overlay like the reference */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15)_0%,transparent_30%),repeating-linear-gradient(45deg,rgba(0,0,0,0.05)_0px,rgba(0,0,0,0.05)_2px,transparent_2px,transparent_4px)] opacity-50" />
+                </div>
+
+                {/* Text Stack */}
+                <div className="flex flex-col gap-1 mb-5 flex-1">
+                  <h3 className="text-[1.15em] font-display font-bold text-foreground m-0 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1">{event.name}</h3>
+                  <p className="text-[0.8rem] text-muted-foreground m-0 opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1 line-clamp-2 leading-relaxed mb-3">{event.description}</p>
+                  
+                  <div className="space-y-1.5 transition-all duration-300 group-hover:translate-x-1">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Calendar size={13} className="text-primary/70" />
+                      <span>{event.date} • {event.time}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <MapPin size={13} className="text-primary/70" />
+                      <span>{event.location}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Registration & Fee Section */}
+                <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between gap-4">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[0.7em] text-muted-foreground font-semibold uppercase tracking-wide">Fee</span>
+                    <span className="text-base font-extrabold text-foreground group-hover:text-primary transition-colors">₹{event.fee}</span>
+                  </div>
+                  <button
+                    onClick={() => handleRegister(event)}
+                    disabled={registered}
+                    className={`px-5 py-2 text-xs font-bold rounded-full transition-all duration-300 ${
+                      registered
+                        ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                        : "bg-primary text-white border border-primary/20 hover:bg-primary/90 hover:shadow-[0_4px_12px_rgba(220,38,38,0.3)] hover:-translate-y-0.5 active:translate-y-0"
+                    }`}
+                  >
+                    {registered ? "✓ Registered" : "Register Now"}
+                  </button>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      ))}
+            </div>
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default PastEvents;
+

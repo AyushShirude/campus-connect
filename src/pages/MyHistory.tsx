@@ -1,13 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Calendar, Clock, IndianRupee, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import AuthModal from "@/components/AuthModal";
 import { events } from "@/data/mockData";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
 
 const MyHistory = () => {
-  const { user, registeredEvents } = useAuth();
-  const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
+  const { user, registeredEvents, clearHistory } = useAuth();
 
   if (!user) {
     return (
@@ -16,19 +15,40 @@ const MyHistory = () => {
           <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">My Event History</h1>
           <p className="text-lg text-muted-foreground">Please login to view your event history.</p>
         </div>
-        <button onClick={() => setAuthModal("login")} className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-accent transition-colors">
+        <Link to="/auth?mode=login" className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-md hover:bg-accent transition-colors inline-block">
           Login
-        </button>
-        {authModal && <AuthModal mode={authModal} onClose={() => setAuthModal(null)} onSwitch={(m) => setAuthModal(m)} />}
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <div className="text-center max-w-2xl mx-auto mb-12">
-        <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">My Event History</h1>
-        <p className="text-lg text-muted-foreground">Events you have registered for</p>
+      <div className="relative mb-12">
+        <div className="text-center max-w-2xl mx-auto flex flex-col items-center">
+          <h1 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-3">My Event History</h1>
+          <p className="text-lg text-muted-foreground mb-4">Events you have registered for</p>
+
+          {/* Placeholder to keep vertical spacing on desktop */}
+          {registeredEvents.length > 0 && (
+            <div className="hidden md:block h-[42px]" />
+          )}
+        </div>
+
+        {registeredEvents.length > 0 && (
+          <div className="mt-4 md:mt-0 flex justify-center md:block md:absolute md:right-0 md:top-[8px]">
+            <button
+              onClick={() => {
+                clearHistory();
+                toast.success("History cleared successfully!");
+              }}
+              className="flex items-center justify-center gap-2 px-5 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-full transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(220,38,38,0.4)]"
+            >
+              <Trash2 size={16} />
+              Clear History
+            </button>
+          </div>
+        )}
       </div>
 
       {registeredEvents.length === 0 ? (
@@ -44,10 +64,10 @@ const MyHistory = () => {
             const eventDetails = events.find((e) => e.id === event.eventId) || events[0];
             return (
               <div key={i} className="group relative bg-card rounded-2xl p-5 border border-border overflow-hidden transition-all duration-500 hover:-translate-y-2.5 hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] hover:border-primary/30 flex flex-col h-full font-body">
-                
+
                 {/* Shine Element overlay */}
                 <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent_40%,rgba(255,255,255,0.7)_50%,transparent_60%)] bg-[length:300%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shine pointer-events-none z-10 transition-opacity duration-300 mix-blend-overlay" />
-                
+
                 {/* Glow Element */}
                 <div className="absolute inset-[-10px] bg-[radial-gradient(circle_at_50%_0%,theme(colors.primary.DEFAULT/0.15)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
 

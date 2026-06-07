@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, ArrowRight, GraduationCap, Users, Trophy, Rocket } from "lucide-react";
 import confetti from "canvas-confetti";
-import AuthModal from "@/components/AuthModal";
 import { categories, events, newsItems } from "@/data/mockData";
 import UpcomingEventsSlider from "@/components/UpcomingEventsSlider";
 import CategorySlider from "@/components/CategorySlider";
 
 const Index = () => {
-  const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
   const upcomingEvents = events.filter((e) => e.status === "upcoming");
 
   useEffect(() => {
@@ -95,9 +93,9 @@ const Index = () => {
             Discover, participate, and showcase your talent through exciting university events curated just for you.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <button onClick={() => setAuthModal("register")} className="px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-[0_4px_25px_rgba(255,255,255,0.25)] hover:-translate-y-1.5 hover:shadow-[0_8px_35px_rgba(255,255,255,0.35)] w-full sm:w-auto text-lg pointer-events-auto">
+            <Link to="/auth?mode=register" className="px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-[0_4px_25px_rgba(255,255,255,0.25)] hover:-translate-y-1.5 hover:shadow-[0_8px_35px_rgba(255,255,255,0.35)] w-full sm:w-auto text-lg pointer-events-auto text-center">
               Register Now
-            </button>
+            </Link>
             <Link to="/events" className="px-8 py-4 bg-primary/40 text-white border-2 border-white/30 font-bold rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1.5 backdrop-blur-md w-full sm:w-auto text-lg shadow-[0_4px_20px_rgba(0,0,0,0.2)] pointer-events-auto">
               Explore Events
             </Link>
@@ -221,8 +219,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {authModal && <AuthModal mode={authModal} onClose={() => setAuthModal(null)} onSwitch={(m) => setAuthModal(m)} />}
     </div>
   );
 };

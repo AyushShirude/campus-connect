@@ -24,6 +24,7 @@ interface AuthContextType {
   logout: () => void;
   registerForEvent: (event: { eventId: string; eventName: string; category: string; date: string; time: string; fee: number }) => boolean;
   isRegisteredForEvent: (eventId: string) => boolean;
+  clearHistory: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -83,8 +84,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isRegisteredForEvent = (eventId: string) => registeredEvents.some((e) => e.eventId === eventId);
 
+  const clearHistory = () => {
+    setRegisteredEvents([]);
+    localStorage.removeItem("pcu_events");
+  };
+
   return (
-    <AuthContext.Provider value={{ user, registeredEvents, login, register, logout, registerForEvent, isRegisteredForEvent }}>
+    <AuthContext.Provider value={{ user, registeredEvents, login, register, logout, registerForEvent, isRegisteredForEvent, clearHistory }}>
       {children}
     </AuthContext.Provider>
   );

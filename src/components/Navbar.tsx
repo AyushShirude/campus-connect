@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import AuthModal from "./AuthModal";
 import { useTheme } from "./ThemeProvider";
 const navLinks = [
   { label: "Home", path: "/" },
@@ -17,7 +16,6 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
   const { theme, setTheme } = useTheme();
 
   return (
@@ -69,20 +67,23 @@ const Navbar = () => {
                 <span className="text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 px-5 py-2.5 rounded-full border border-gray-200/50 dark:border-gray-700/50">
                   Hi, {user.username}
                 </span>
-                <button onClick={logout} className="px-6 py-2.5 text-sm font-bold bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+                <button 
+                  onClick={logout} 
+                  className="px-5 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-full transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(220,38,38,0.4)]"
+                >
                   Logout
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 {/* Login Button (Pill) */}
-                <button onClick={() => setAuthModal("login")} className="px-6 py-2.5 text-sm font-bold bg-gray-100/80 dark:bg-gray-800/80 text-gray-900 dark:text-white border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md">
+                <Link to="/auth?mode=login" className="px-6 py-2.5 text-sm flex items-center justify-center font-bold bg-gray-100/80 dark:bg-gray-800/80 text-gray-900 dark:text-white border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md">
                   Login
-                </button>
+                </Link>
                 {/* Register Button (Pill) */}
-                <button onClick={() => setAuthModal("register")} className="px-6 py-2.5 text-sm font-bold bg-primary text-white border border-primary/20 transition-all duration-300 rounded-full hover:bg-primary/90 hover:shadow-[0_4px_15px_rgba(220,38,38,0.4)] hover:-translate-y-0.5">
+                <Link to="/auth?mode=register" className="px-6 py-2.5 text-sm flex items-center justify-center font-bold bg-primary text-white border border-primary/20 transition-all duration-300 rounded-full hover:bg-primary/90 hover:shadow-[0_4px_15px_rgba(220,38,38,0.4)] hover:-translate-y-0.5">
                   Register
-                </button>
+                </Link>
               </div>
             )}
           </div>
@@ -121,18 +122,21 @@ const Navbar = () => {
           ))}
           <div className="flex flex-col gap-3 pt-4 mt-2 border-t border-gray-100 dark:border-gray-800">
             {user ? (
-              <button onClick={() => { logout(); setMobileOpen(false); }} className="w-full py-3.5 text-sm font-bold bg-red-50 dark:bg-red-900/20 text-red-600 rounded-2xl hover:bg-red-100 transition-colors">Logout</button>
+              <button 
+                onClick={() => { logout(); setMobileOpen(false); }} 
+                className="w-full py-3.5 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5"
+              >
+                Logout
+              </button>
             ) : (
               <div className="flex gap-3">
-                <button onClick={() => { setAuthModal("login"); setMobileOpen(false); }} className="flex-1 py-3.5 text-sm font-bold bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl hover:bg-gray-200 transition-colors">Login</button>
-                <button onClick={() => { setAuthModal("register"); setMobileOpen(false); }} className="flex-1 py-3.5 text-sm font-bold bg-primary text-white rounded-2xl shadow-[0_4px_15px_rgba(220,38,38,0.3)] hover:bg-primary/90 transition-colors">Register</button>
+                <Link to="/auth?mode=login" onClick={() => setMobileOpen(false)} className="flex-1 py-3.5 flex items-center justify-center text-sm font-bold bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl hover:bg-gray-200 transition-colors">Login</Link>
+                <Link to="/auth?mode=register" onClick={() => setMobileOpen(false)} className="flex-1 py-3.5 flex items-center justify-center text-sm font-bold bg-primary text-white rounded-2xl shadow-[0_4px_15px_rgba(220,38,38,0.3)] hover:bg-primary/90 transition-colors">Register</Link>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {authModal && <AuthModal mode={authModal} onClose={() => setAuthModal(null)} onSwitch={(mode) => setAuthModal(mode)} />}
     </>
   );
 };

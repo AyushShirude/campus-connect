@@ -60,10 +60,10 @@ export const events: EventItem[] = [
 ];
 
 export const pastEvents: EventItem[] = [
-  { id: "p1", name: "Tech Conference 2025", category: "tech-events", description: "Annual technology conference featuring keynotes from industry leaders.", date: "2025-11-15", time: "9:00 AM", location: "Main Auditorium", fee: 50, image: techImg, status: "past", highlights: "Over 500 participants, 15 speakers, 3 workshops conducted." },
-  { id: "p2", name: "Annual Sports Day", category: "sports-events", description: "University-wide sports day with multiple athletic events.", date: "2025-12-10", time: "7:00 AM", location: "Sports Complex", fee: 50, image: sportsImg, status: "past", highlights: "New records set in 4 events. 1200+ participants." },
-  { id: "p3", name: "Hackathon 2025", category: "hackathons", description: "24-hour hackathon with industry mentors and exciting prizes.", date: "2025-10-20", time: "9:00 AM", location: "Innovation Hub", fee: 50, image: hackathonImg, status: "past", highlights: "50 teams participated. Winning solution deployed by sponsor company." },
-  { id: "p4", name: "Music Fest 2025", category: "music-events", description: "Three-day music festival with performances from student bands.", date: "2025-09-05", time: "4:00 PM", location: "Open Air Theater", fee: 50, image: musicImg, status: "past", highlights: "Featured 20 bands. Attended by 2000+ students." },
+  { id: "p1", name: "Tech Conference 2026", category: "tech-events", description: "Annual technology conference featuring keynotes from industry leaders.", date: "2026-11-15", time: "9:00 AM", location: "Main Auditorium", fee: 50, image: techImg, status: "upcoming", highlights: "Over 500 participants, 15 speakers, 3 workshops conducted." },
+  { id: "p2", name: "Annual Sports Day 2026", category: "sports-events", description: "University-wide sports day with multiple athletic events.", date: "2026-12-10", time: "7:00 AM", location: "Sports Complex", fee: 50, image: sportsImg, status: "upcoming", highlights: "New records set in 4 events. 1200+ participants." },
+  { id: "p3", name: "Hackathon 2026", category: "hackathons", description: "24-hour hackathon with industry mentors and exciting prizes.", date: "2026-10-20", time: "9:00 AM", location: "Innovation Hub", fee: 50, image: hackathonImg, status: "upcoming", highlights: "50 teams participated. Winning solution deployed by sponsor company." },
+  { id: "p4", name: "Music Fest 2026", category: "music-events", description: "Three-day music festival with performances from student bands.", date: "2026-09-05", time: "4:00 PM", location: "Open Air Theater", fee: 50, image: musicImg, status: "upcoming", highlights: "Featured 20 bands. Attended by 2000+ students." },
 ];
 
 export const newsItems: NewsItem[] = [

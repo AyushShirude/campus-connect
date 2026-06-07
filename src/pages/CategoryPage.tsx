@@ -3,13 +3,12 @@ import { Calendar, MapPin, Clock } from "lucide-react";
 import { categories, events } from "@/data/mockData";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useState } from "react";
-import AuthModal from "@/components/AuthModal";
+import { useNavigate } from "react-router-dom";
 
 const CategoryPage = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const { user, registerForEvent, isRegisteredForEvent } = useAuth();
-  const [authModal, setAuthModal] = useState<"login" | "register" | null>(null);
 
   const category = categories.find((c) => c.slug === slug);
   const categoryEvents = events.filter((e) => e.category === slug);
@@ -27,7 +26,7 @@ const CategoryPage = () => {
 
   const handleRegister = (event: typeof events[0]) => {
     if (!user) {
-      setAuthModal("login");
+      navigate("/auth?mode=login");
       return;
     }
     if (isRegisteredForEvent(event.id)) {
@@ -110,7 +109,6 @@ const CategoryPage = () => {
         <p className="text-center text-muted-foreground py-10">No events in this category yet.</p>
       )}
 
-      {authModal && <AuthModal mode={authModal} onClose={() => setAuthModal(null)} onSwitch={(m) => setAuthModal(m)} />}
     </div>
   );
 };
