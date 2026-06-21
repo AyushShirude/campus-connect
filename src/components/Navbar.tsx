@@ -7,7 +7,7 @@ const navLinks = [
   { label: "Home", path: "/" },
   { label: "Events", path: "/events" },
   { label: "Categories", path: "/categories" },
-  { label: "Current Events", path: "/past-events" },
+  { label: "Current Events", path: "/current-events" },
   { label: "My History", path: "/my-history" },
   { label: "Contact", path: "/contact" },
 ];
@@ -67,8 +67,8 @@ const Navbar = () => {
                 <span className="text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 px-5 py-2.5 rounded-full border border-gray-200/50 dark:border-gray-700/50">
                   Hi, {user.username}
                 </span>
-                <button 
-                  onClick={logout} 
+                <button
+                  onClick={logout}
                   className="px-5 py-2 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-full transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-[0_4px_15px_rgba(220,38,38,0.4)]"
                 >
                   Logout
@@ -122,8 +122,8 @@ const Navbar = () => {
           ))}
           <div className="flex flex-col gap-3 pt-4 mt-2 border-t border-gray-100 dark:border-gray-800">
             {user ? (
-              <button 
-                onClick={() => { logout(); setMobileOpen(false); }} 
+              <button
+                onClick={() => { logout(); setMobileOpen(false); }}
                 className="w-full py-3.5 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5"
               >
                 Logout

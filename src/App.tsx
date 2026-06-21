@@ -9,12 +9,13 @@ import Index from "./pages/Index";
 import Events from "./pages/Events";
 import Categories from "./pages/Categories";
 import CategoryPage from "./pages/CategoryPage";
-import PastEvents from "./pages/PastEvents";
+import CurrentEvents from "./pages/CurrentEvents";
 import MyHistory from "./pages/MyHistory";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -26,13 +27,14 @@ const App = () => (
         <Sonner />
         <AuthProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Layout>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/category/:slug" element={<CategoryPage />} />
-                <Route path="/past-events" element={<PastEvents />} />
+                <Route path="/current-events" element={<CurrentEvents />} />
                 <Route path="/my-history" element={<MyHistory />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/auth" element={<Auth />} />
