@@ -11,19 +11,19 @@ const categories = [
 ];
 
 const events = [
-  { name: "AI & ML Workshop", categorySlug: "tech-events", description: "Hands-on workshop on artificial intelligence and machine learning fundamentals.", date: "2026-03-15", time: "10:00 AM", location: "Main Auditorium", fee: 50, status: "ongoing" },
-  { name: "Web Dev Bootcamp", categorySlug: "tech-events", description: "Intensive full-stack web development bootcamp with React and Node.js.", date: "2026-03-20", time: "9:00 AM", location: "Computer Lab 1", fee: 50, status: "upcoming" },
-  { name: "Robotics Challenge", categorySlug: "tech-events", description: "Design and program robots to complete challenging obstacle courses.", date: "2026-04-05", time: "11:00 AM", location: "Innovation Center", fee: 50, status: "upcoming" },
-  { name: "Battle of Bands", categorySlug: "music-events", description: "Showcase your band's talent in this electrifying music competition.", date: "2026-03-18", time: "5:00 PM", location: "Open Air Theater", fee: 50, status: "ongoing" },
-  { name: "Classical Music Night", categorySlug: "music-events", description: "An evening of soulful classical music performances by renowned artists.", date: "2026-04-01", time: "6:30 PM", location: "Auditorium B", fee: 50, status: "upcoming" },
-  { name: "Cricket Tournament", categorySlug: "sports-events", description: "Inter-department cricket tournament with exciting prizes.", date: "2026-03-12", time: "8:00 AM", location: "Sports Ground", fee: 50, status: "ongoing" },
-  { name: "Marathon 2026", categorySlug: "sports-events", description: "Annual university marathon open to all students and faculty.", date: "2026-04-10", time: "6:00 AM", location: "Campus Circuit", fee: 50, status: "upcoming" },
-  { name: "Code Sprint 48", categorySlug: "hackathons", description: "48-hour hackathon to build solutions for real-world problems.", date: "2026-03-22", time: "9:00 AM", location: "Innovation Hub", fee: 50, status: "ongoing" },
-  { name: "Green Tech Hack", categorySlug: "hackathons", description: "Hackathon focused on sustainable technology and green innovation.", date: "2026-04-15", time: "10:00 AM", location: "Lab Complex", fee: 50, status: "upcoming" },
-  { name: "Inter-College Debate", categorySlug: "intercollege-events", description: "Prestigious debate competition with colleges from across the state.", date: "2026-03-25", time: "2:00 PM", location: "Conference Hall", fee: 50, status: "ongoing" },
-  { name: "Cultural Fest 2026", categorySlug: "intercollege-events", description: "Grand inter-college cultural extravaganza with performances and exhibitions.", date: "2026-04-20", time: "10:00 AM", location: "Campus Wide", fee: 50, status: "upcoming" },
-  { name: "Basketball Championship", categorySlug: "sports-events", description: "State-level inter-college basketball tournament.", date: "2026-04-18", time: "9:00 AM", location: "Indoor Stadium", fee: 100, status: "upcoming" },
-  { name: "Table Tennis Open", categorySlug: "sports-events", description: "Campus-wide table tennis tournament for singles and doubles.", date: "2026-04-22", time: "10:00 AM", location: "Student Center Hub", fee: 30, status: "upcoming" },
+  { name: "AI & ML Workshop", categorySlug: "tech-events", description: "Hands-on workshop on artificial intelligence and machine learning fundamentals.", date: "2026-03-15", time: "10:00 AM", location: "Main Auditorium", fee: 50, status: "ongoing", imageUrl: "/assets/ai-ml-workshop.png" },
+  { name: "Web Dev Bootcamp", categorySlug: "tech-events", description: "Intensive full-stack web development bootcamp with React and Node.js.", date: "2026-03-20", time: "9:00 AM", location: "Computer Lab 1", fee: 50, status: "upcoming", imageUrl: "/assets/web-dev-bootcamp.png" },
+  { name: "Robotics Challenge", categorySlug: "tech-events", description: "Design and program robots to complete challenging obstacle courses.", date: "2026-04-05", time: "11:00 AM", location: "Innovation Center", fee: 50, status: "upcoming", imageUrl: "/assets/robotics-challenge.png" },
+  { name: "Battle of Bands", categorySlug: "music-events", description: "Showcase your band's talent in this electrifying music competition.", date: "2026-03-18", time: "5:00 PM", location: "Open Air Theater", fee: 50, status: "ongoing", imageUrl: "/assets/battle-bands.png" },
+  { name: "Classical Music Night", categorySlug: "music-events", description: "An evening of soulful classical music performances by renowned artists.", date: "2026-04-01", time: "6:30 PM", location: "Auditorium B", fee: 50, status: "upcoming", imageUrl: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80" },
+  { name: "Cricket Tournament", categorySlug: "sports-events", description: "Inter-department cricket tournament with exciting prizes.", date: "2026-03-12", time: "8:00 AM", location: "Sports Ground", fee: 50, status: "ongoing", imageUrl: "/assets/cricket-tournament.png" },
+  { name: "Marathon 2026", categorySlug: "sports-events", description: "Annual university marathon open to all students and faculty.", date: "2026-04-10", time: "6:00 AM", location: "Campus Circuit", fee: 50, status: "upcoming", imageUrl: "/assets/marathon-2026.png" },
+  { name: "Code Sprint 48", categorySlug: "hackathons", description: "48-hour hackathon to build solutions for real-world problems.", date: "2026-03-22", time: "9:00 AM", location: "Innovation Hub", fee: 50, status: "ongoing", imageUrl: "/assets/code-sprint-48.png" },
+  { name: "Green Tech Hack", categorySlug: "hackathons", description: "Hackathon focused on sustainable technology and green innovation.", date: "2026-04-15", time: "10:00 AM", location: "Lab Complex", fee: 50, status: "upcoming", imageUrl: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80" },
+  { name: "Inter-College Debate", categorySlug: "intercollege-events", description: "Prestigious debate competition with colleges from across the state.", date: "2026-03-25", time: "2:00 PM", location: "Conference Hall", fee: 50, status: "ongoing", imageUrl: "/assets/intercollege-debate.png" },
+  { name: "Cultural Fest 2026", categorySlug: "intercollege-events", description: "Grand inter-college cultural extravaganza with performances and exhibitions.", date: "2026-04-20", time: "10:00 AM", location: "Campus Wide", fee: 50, status: "upcoming", imageUrl: "/assets/cultural-fest-2026.png" },
+  { name: "Basketball Championship", categorySlug: "sports-events", description: "State-level inter-college basketball tournament.", date: "2026-04-18", time: "9:00 AM", location: "Indoor Stadium", fee: 100, status: "upcoming", imageUrl: "/assets/basketball-championship.png" },
+  { name: "Table Tennis Open", categorySlug: "sports-events", description: "Campus-wide table tennis tournament for singles and doubles.", date: "2026-04-22", time: "10:00 AM", location: "Student Center Hub", fee: 30, status: "upcoming", imageUrl: "/assets/table-tennis-open.png" },
 ];
 
 const pastEvents = [
@@ -34,6 +34,10 @@ const pastEvents = [
 ];
 
 async function main() {
+  console.log('Cleaning database events and registrations...');
+  await prisma.registration.deleteMany({});
+  await prisma.event.deleteMany({});
+
   console.log('Seeding categories...');
   const categoryMap: any = {};
   
@@ -63,7 +67,7 @@ async function main() {
         location: ev.location,
         fee: ev.fee,
         status: ev.status,
-        imageUrl: `https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80`,
+        imageUrl: ev.imageUrl,
         highlights: []
       }
     });
