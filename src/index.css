@@ -86,10 +86,17 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground font-body;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display;
   }
 }
@@ -98,12 +105,15 @@
   .gradient-maroon {
     background: linear-gradient(135deg, hsl(var(--maroon-dark)), hsl(var(--maroon)));
   }
+
   .gradient-maroon-overlay {
     background: linear-gradient(135deg, hsla(350, 75%, 22%, 0.85), hsla(350, 61%, 30%, 0.7));
   }
+
   .shadow-card {
     box-shadow: 0 2px 12px -2px hsla(0, 0%, 0%, 0.08), 0 1px 4px -1px hsla(0, 0%, 0%, 0.05);
   }
+
   .shadow-card-hover {
     box-shadow: 0 8px 24px -4px hsla(0, 0%, 0%, 0.12), 0 2px 8px -2px hsla(0, 0%, 0%, 0.08);
   }
