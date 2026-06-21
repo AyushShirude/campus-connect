@@ -8,9 +8,22 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS with support for customizable domains
+// Enable CORS with support for customizable domains and localhost ports
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:8080',
+  'http://localhost:8081'
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'), false);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
