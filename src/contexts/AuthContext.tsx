@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { apiClient } from "@/lib/api";
 
 interface User {
   username: string;
@@ -19,12 +20,12 @@ interface RegisteredEvent {
 interface AuthContextType {
   user: User | null;
   registeredEvents: RegisteredEvent[];
-  login: (email: string, password: string) => boolean;
-  register: (username: string, email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (firstName: string, lastName: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  registerForEvent: (event: { eventId: string; eventName: string; category: string; date: string; time: string; fee: number }) => boolean;
+  registerForEvent: (event: { eventId: string; eventName: string; category: string; date: string; time: string; fee: number }) => Promise<boolean>;
   isRegisteredForEvent: (eventId: string) => boolean;
-  clearHistory: () => void;
+  clearHistory: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -41,52 +42,117 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [registeredEvents, setRegisteredEvents] = useState<RegisteredEvent[]>(() => {
-    const saved = localStorage.getItem("pcu_events");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [registeredEvents, setRegisteredEvents] = useState<RegisteredEvent[]>([]);
+
+  const fetchRegistrations = async () => {
+    const token = localStorage.getItem("pcu_token");
+    if (!token) {
+      setRegisteredEvents([]);
+      return;
+    }
+    try {
+      const data = await apiClient("/registrations");
+      const mapped = data.map((reg: any) => ({
+        eventId: String(reg.event.id),
+        eventName: reg.event.name,
+        category: reg.event.category?.title || "Events",
+        date: new Date(reg.event.date).toLocaleDateString('en-CA'),
+        time: reg.event.time,
+        fee: reg.event.fee,
+        registeredAt: reg.registeredAt,
+        status: "Confirmed" as const
+      }));
+      setRegisteredEvents(mapped);
+    } catch (err) {
+      console.error("Failed to fetch registrations:", err);
+      if (String(err).includes("Unauthorized") || String(err).includes("401")) {
+        logout();
+      }
+    }
+  };
 
   useEffect(() => {
-    if (user) localStorage.setItem("pcu_user", JSON.stringify(user));
-    else localStorage.removeItem("pcu_user");
+    if (user) {
+      fetchRegistrations();
+    } else {
+      setRegisteredEvents([]);
+    }
   }, [user]);
 
-  useEffect(() => {
-    localStorage.setItem("pcu_events", JSON.stringify(registeredEvents));
-  }, [registeredEvents]);
-
-  const login = (email: string, password: string) => {
-    const users = JSON.parse(localStorage.getItem("pcu_users") || "[]");
-    const found = users.find((u: any) => u.email === email && u.password === password);
-    if (found) {
-      setUser({ username: found.username, email: found.email });
+  const login = async (email: string, password: string) => {
+    try {
+      const data = await apiClient("/auth/login", {
+        method: "POST",
+        bodyData: { email, password }
+      });
+      localStorage.setItem("pcu_token", data.token);
+      const loggedUser = {
+        username: `${data.user.firstName} ${data.user.lastName}`.trim(),
+        email: data.user.email
+      };
+      localStorage.setItem("pcu_user", JSON.stringify(loggedUser));
+      setUser(loggedUser);
       return true;
+    } catch (err) {
+      console.error("Login failed:", err);
+      return false;
     }
-    return false;
   };
 
-  const register = (username: string, email: string, password: string) => {
-    const users = JSON.parse(localStorage.getItem("pcu_users") || "[]");
-    if (users.find((u: any) => u.email === email)) return false;
-    users.push({ username, email, password });
-    localStorage.setItem("pcu_users", JSON.stringify(users));
-    setUser({ username, email });
-    return true;
+  const register = async (firstName: string, lastName: string, email: string, password: string) => {
+    try {
+      const data = await apiClient("/auth/signup", {
+        method: "POST",
+        bodyData: { firstName, lastName, email, password }
+      });
+      localStorage.setItem("pcu_token", data.token);
+      const loggedUser = {
+        username: `${data.user.firstName} ${data.user.lastName}`.trim(),
+        email: data.user.email
+      };
+      localStorage.setItem("pcu_user", JSON.stringify(loggedUser));
+      setUser(loggedUser);
+      return true;
+    } catch (err) {
+      console.error("Registration failed:", err);
+      return false;
+    }
   };
 
-  const logout = () => setUser(null);
-
-  const registerForEvent = (event: { eventId: string; eventName: string; category: string; date: string; time: string; fee: number }) => {
-    if (registeredEvents.find((e) => e.eventId === event.eventId)) return false;
-    setRegisteredEvents((prev) => [...prev, { ...event, registeredAt: new Date().toISOString(), status: "Confirmed" }]);
-    return true;
-  };
-
-  const isRegisteredForEvent = (eventId: string) => registeredEvents.some((e) => e.eventId === eventId);
-
-  const clearHistory = () => {
+  const logout = () => {
+    localStorage.removeItem("pcu_token");
+    localStorage.removeItem("pcu_user");
+    setUser(null);
     setRegisteredEvents([]);
-    localStorage.removeItem("pcu_events");
+  };
+
+  const registerForEvent = async (event: { eventId: string; eventName: string; category: string; date: string; time: string; fee: number }) => {
+    try {
+      await apiClient("/registrations", {
+        method: "POST",
+        bodyData: { eventId: Number(event.eventId) }
+      });
+      await fetchRegistrations();
+      return true;
+    } catch (err) {
+      console.error("Registration for event failed:", err);
+      return false;
+    }
+  };
+
+  const isRegisteredForEvent = (eventId: string) => {
+    return registeredEvents.some((e) => e.eventId === eventId);
+  };
+
+  const clearHistory = async () => {
+    try {
+      await apiClient("/registrations/clear", {
+        method: "POST"
+      });
+      setRegisteredEvents([]);
+    } catch (err) {
+      console.error("Failed to clear registrations:", err);
+    }
   };
 
   return (

@@ -20,15 +20,14 @@ const Auth = () => {
     setMode(searchParams.get("mode") === "register" ? "register" : "login");
   }, [searchParams]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "register") {
       if (form.password.length < 6) {
         toast.error("Password must be at least 6 characters");
         return;
       }
-      const username = `${form.firstName} ${form.lastName}`.trim() || "User";
-      const success = register(username, form.email, form.password);
+      const success = await register(form.firstName, form.lastName, form.email, form.password);
       if (success) {
         toast.success("Registration successful!");
         navigate("/");
@@ -36,7 +35,7 @@ const Auth = () => {
         toast.error("Email already registered");
       }
     } else {
-      const success = login(form.email, form.password);
+      const success = await login(form.email, form.password);
       if (success) {
         toast.success("Login successful!");
         navigate("/");
