@@ -1,21 +1,104 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, MapPin, Clock } from "lucide-react";
-import { categories, events } from "@/data/mockData";
+import { Calendar, MapPin, Clock, Loader2 } from "lucide-react";
+import { apiClient } from "@/lib/api";
+import { categories as mockCategories, events as mockEvents } from "@/data/mockData";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+
+interface CategoryItem {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  image: string;
+}
+
+interface EventItem {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  fee: number;
+  image: string;
+  status: string;
+}
 
 const CategoryPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user, registerForEvent, isRegisteredForEvent } = useAuth();
 
-  const category = categories.find((c) => c.slug === slug);
-  const categoryEvents = events.filter((e) => e.category === slug);
+  const [category, setCategory] = useState<CategoryItem | null>(null);
+  const [categoryEvents, setCategoryEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        setLoading(true);
+        setNotFound(false);
+        const data = await apiClient(`/category/${slug}`);
+        setCategory({
+          id: String(data.id),
+          title: data.title,
+          slug: data.slug,
+          description: data.description,
+          image: data.imageUrl || "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80"
+        });
+        const mappedEvents = (data.events || []).map((e: any) => ({
+          id: String(e.id),
+          name: e.name,
+          category: slug || "",
+          description: e.description,
+          date: new Date(e.date).toLocaleDateString('en-CA'),
+          time: e.time,
+          location: e.location,
+          fee: e.fee,
+          image: e.imageUrl || data.imageUrl || "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80",
+          status: e.status
+        }));
+        setCategoryEvents(mappedEvents);
+      } catch (err) {
+        console.error("Failed to load category from API, falling back to mock data:", err);
+        const mockCat = mockCategories.find((c) => c.slug === slug);
+        if (mockCat) {
+          setCategory({
+            id: mockCat.id,
+            title: mockCat.title,
+            slug: mockCat.slug,
+            description: mockCat.description,
+            image: mockCat.image
+          });
+          const filteredEvents = mockEvents.filter((e) => e.category === slug);
+          setCategoryEvents(filteredEvents);
+        } else {
+          setNotFound(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategoryData();
+  }, [slug]);
+
   const ongoing = categoryEvents.filter((e) => e.status === "ongoing");
   const upcoming = categoryEvents.filter((e) => e.status === "upcoming");
 
-  if (!category) {
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" strokeWidth={3} />
+      </div>
+    );
+  }
+
+  if (notFound || !category) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
         <h1 className="text-2xl font-display font-bold text-foreground">Category not found</h1>
@@ -24,7 +107,7 @@ const CategoryPage = () => {
     );
   }
 
-  const handleRegister = (event: typeof events[0]) => {
+  const handleRegister = async (event: EventItem) => {
     if (!user) {
       navigate("/auth?mode=login");
       return;
@@ -36,7 +119,7 @@ const CategoryPage = () => {
     // Simulate payment
     const confirmed = window.confirm(`Confirm payment of ₹${event.fee} for "${event.name}"?`);
     if (confirmed) {
-      registerForEvent({
+      const success = await registerForEvent({
         eventId: event.id,
         eventName: event.name,
         category: category.title,
@@ -44,11 +127,15 @@ const CategoryPage = () => {
         time: event.time,
         fee: event.fee,
       });
-      toast.success(`Successfully registered for ${event.name}! Payment of ₹${event.fee} confirmed.`);
+      if (success) {
+        toast.success(`Successfully registered for ${event.name}! Payment of ₹${event.fee} confirmed.`);
+      } else {
+        toast.error("Registration failed");
+      }
     }
   };
 
-  const EventCard = ({ event }: { event: typeof events[0] }) => {
+  const EventCard = ({ event }: { event: EventItem }) => {
     const registered = isRegisteredForEvent(event.id);
     return (
       <div className="bg-card rounded-lg overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300">
