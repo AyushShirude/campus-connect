@@ -2,12 +2,41 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, MapPin, ArrowRight, GraduationCap, Users, Trophy, Rocket } from "lucide-react";
 import confetti from "canvas-confetti";
-import { categories, events, newsItems } from "@/data/mockData";
+import { categories, newsItems, events as mockEvents } from "@/data/mockData";
 import UpcomingEventsSlider from "@/components/UpcomingEventsSlider";
 import CategorySlider from "@/components/CategorySlider";
+import { apiClient } from "@/lib/api";
 
 const Index = () => {
-  const upcomingEvents = events.filter((e) => e.status === "upcoming");
+  const [eventsList, setEventsList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const data = await apiClient("/events");
+        const mapped = data.map((e: any) => ({
+          id: String(e.id),
+          name: e.name,
+          category: e.category?.slug || "",
+          description: e.description,
+          date: new Date(e.date).toLocaleDateString('en-CA'),
+          time: e.time,
+          location: e.location,
+          fee: e.fee,
+          image: e.imageUrl || e.category?.imageUrl || "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80",
+          status: e.status,
+          highlights: e.highlights || []
+        }));
+        setEventsList(mapped);
+      } catch (err) {
+        console.error("Failed to load events for landing page, falling back to mock data:", err);
+        setEventsList(mockEvents);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const upcomingEvents = eventsList.filter((e) => e.status === "upcoming");
 
   useEffect(() => {
     // Oscar-style confetti cannon after the text has started appearing
@@ -85,11 +114,26 @@ const Index = () => {
         </div>
 
         {/* Main Content */}
-        <div className="relative z-20 text-center px-4 max-w-4xl mt-10" style={{ animation: 'pop-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards' }}>
-          <h1 className="text-5xl md:text-[5rem] lg:text-[6rem] font-display font-extrabold text-white mb-6 leading-[1.1] tracking-tight drop-shadow-lg">
-            Welcome to <br className="hidden md:block" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-100 via-white to-red-200 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">PCU Events</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-white/90 mb-12 font-body max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
+        <div className="relative z-20 px-4 max-w-5xl mt-10 w-full flex flex-col items-center animate-[pop-in_1.2s_cubic-bezier(0.2,0.8,0.2,1)_forwards]">
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-8 w-full text-center md:text-left">
+            {/* Logo Container (Left Box) */}
+            <div className="shrink-0 w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-white p-4 shadow-[0_8px_30px_rgba(255,255,255,0.15)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)] flex items-center justify-center border border-white/20 transition-transform duration-300 hover:scale-105">
+              <img src="/assets/logo.png" alt="PCU Logo" className="w-full h-auto object-contain" />
+            </div>
+
+            {/* Title Container (Right Box) */}
+            <div className="flex flex-col justify-center">
+              <span className="text-xl md:text-2xl lg:text-3xl font-display font-medium text-red-100 tracking-wider uppercase mb-1 drop-shadow-md">
+                Welcome to
+              </span>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-100 via-white to-red-200 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] leading-none tracking-tight">
+                PCU Events
+              </h1>
+            </div>
+          </div>
+
+          <p className="text-lg md:text-xl text-white/95 mb-10 font-body max-w-2xl text-center font-light leading-relaxed drop-shadow-md">
             Discover, participate, and showcase your talent through exciting university events curated just for you.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
@@ -104,11 +148,11 @@ const Index = () => {
 
         {/* Animated Bottom wave separator */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20">
-          <svg 
-            className="relative block w-full h-[60px] md:h-[120px]" 
-            xmlns="http://www.w3.org/2000/svg" 
+          <svg
+            className="relative block w-full h-[60px] md:h-[120px]"
+            xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox="0 24 150 28" 
+            viewBox="0 24 150 28"
             preserveAspectRatio="none"
             shapeRendering="auto"
           >
@@ -197,7 +241,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-3xl font-display font-bold text-foreground">Latest News & Highlights</h2>
-            <Link to="/past-events" className="px-4 py-2 border border-primary text-primary text-sm font-medium rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
+            <Link to="/current-events" className="px-4 py-2 border border-primary text-primary text-sm font-medium rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
               View All News
             </Link>
           </div>
